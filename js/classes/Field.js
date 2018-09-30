@@ -97,11 +97,11 @@ Field.prototype.isCellFree = function (position) {
     var self = this;
     var result = true;
 
-    self.elements = self.elements.filter(function(element) { return !element.merged; });
-
     self.elements.forEach(function (item) {
-        if(item.position.vertical == position.vertical && item.position.horizontal == position.horizontal){
-            result = false;
+        if(!item.merged){
+            if(item.position.vertical == position.vertical && item.position.horizontal == position.horizontal){
+                result = false;
+            }
         }
     });
 

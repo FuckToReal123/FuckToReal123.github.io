@@ -63,11 +63,14 @@ Controller.prototype.moveElements = function (callback) {
             var checkedElement = self.field.getElementByPosition(position);
 
             if (element.value == checkedElement.value && element.id != checkedElement.id) {
+                alert('Сливаем элементы: 1.' + element.position.vertical + ' ' + element.position.horizontal + ' 2.' + checkedElement.position.vertical + ' ' + checkedElement.position.horizontal);
                 checkedElement.setValue(element.value * 2);
                 array[number].merged = true;
             }
         }
     });
+
+    self.field.elements = self.field.elements.filter(function(element) { return !element.merged; });
 
     if(callback !== undefined){
         callback();
@@ -85,19 +88,11 @@ Controller.prototype.init = function () {
     window.onmousedown = function (event) {
         mouseStartHorizCoord = event.clientX;
         mouseStartVertCoord = event.clientY;
-
-        console.log('X1:' + event.clientX);
-        console.log('Y1:' + event.clientY);
-
     };
 
     window.onmouseup = function (event) {
         mouseEndHorizCoord = event.clientX;
         mouseEndVertCoord = event.clientY;
-
-        console.log('X2:' + event.clientX);
-        console.log('Y2:' + event.clientY);
-
 
         if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > 50 || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > 50){
             self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord, function () {

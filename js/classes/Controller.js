@@ -32,9 +32,7 @@ Controller.prototype.moveElements = function (callback) {
     }
 
 
-
-
-    self.field.elements.forEach(function (element, number) {
+    self.field.elements.forEach(function (element, number, array) {
         var position = {
             vertical: element.position.vertical + vertical,
             horizontal: element.position.horizontal + horizontal
@@ -47,26 +45,26 @@ Controller.prototype.moveElements = function (callback) {
             position.horizontal += horizontal;
             position.vertical += vertical;
 
-            if(position.horizontal > 300){
+            if (position.horizontal > 300) {
                 position.horizontal = 300;
             }
-            if(position.horizontal < 0){
+            if (position.horizontal < 0) {
                 position.horizontal = 0;
             }
-            if(position.vertical > 300){
+            if (position.vertical > 300) {
                 position.vertical = 300;
             }
-            if(position.vertical < 0){
+            if (position.vertical < 0) {
                 position.vertical = 0;
             }
         }
 
-        if(!self.field.isCellFree(position)){
+        if (!self.field.isCellFree(position)) {
             var checkedElement = self.field.getElementByPosition(position);
 
-            if(element.value == checkedElement.value && element.id != checkedElement.id){
+            if (element.value == checkedElement.value && element.id != checkedElement.id) {
                 checkedElement.setValue(element.value * 2);
-                element = null;
+                array[number].merged = true;
             }
         }
     });

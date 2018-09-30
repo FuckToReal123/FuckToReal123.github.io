@@ -17,10 +17,11 @@ Field.prototype.refresh = function () {
         oldEllements[0].parentNode.removeChild(oldEllements[0]);
     }
 
+    console.log(self.elements);
+
     self.elements.forEach(function (item) {
-        console.log(item);
-        HTML += '<div class="thing t' + item.value + '" style="top: ' + item.position.vertical + 'px; left: '+
-        item.position.horizontal + 'px;"></div>';
+        HTML += '<div class="thing t' + item.value + '" style="top: ' + item.position.vertical + 'px; left: ' +
+            item.position.horizontal + 'px;"></div>';
     });
 
     console.log(HTML);
@@ -73,14 +74,18 @@ Field.prototype.isFreeCells = function () {
 Field.prototype.addElement = function () {
     var self = this;
 
+    if(!self.isFreeCells()){
+        alert('Game Over');
+    }
+
     if(self.isFreeCells()){
         var probability = Math.random();
         if(probability < 0.9){
-            self.insertElement(new GameItem(2, self.getRandomFreeCell(), self.elements.length + 1),function () {
+            self.insertElement(new GameItem(2, self.getRandomFreeCell()),function () {
                 self.refresh();
             });
         } else {
-            self.insertElement(new GameItem(4, self.getRandomFreeCell(), self.elements.length + 1),function () {
+            self.insertElement(new GameItem(4, self.getRandomFreeCell()),function () {
                 self.refresh();
             });
         }
@@ -92,6 +97,7 @@ Field.prototype.isCellFree = function (position) {
     var self = this;
     var result = true;
 
+    self.elements = self.elements.filter(function(element) { return !element.merged; });
 
     self.elements.forEach(function (item) {
         if(item.position.vertical == position.vertical && item.position.horizontal == position.horizontal){

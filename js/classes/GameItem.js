@@ -1,4 +1,6 @@
-function GameItem (value, position, id) {
+var id = 0;
+
+function GameItem (value, position) {
     this.htmlElemnt;//элемент в вёрстке
     this.value = value;//номинал элемента
     this.position = {//объект с координатами элемента
@@ -6,6 +8,7 @@ function GameItem (value, position, id) {
         horizontal: position.horizontal
     };
     this.id = id;
+    id += 1;
 }
 
 GameItem.prototype.move = function (vertical, horizontal) {

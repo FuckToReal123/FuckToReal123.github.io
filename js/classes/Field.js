@@ -76,18 +76,15 @@ Field.prototype.addElement = function () {
     if(self.isFreeCells()){
         var probability = Math.random();
         if(probability < 0.9){
-            self.insertElement(new GameItem(2, self.getRandomFreeCell()),function () {
+            self.insertElement(new GameItem(2, self.getRandomFreeCell(), self.elements.length + 1),function () {
                 self.refresh();
             });
         } else {
-            self.insertElement(new GameItem(4, self.getRandomFreeCell()),function () {
+            self.insertElement(new GameItem(4, self.getRandomFreeCell(), self.elements.length + 1),function () {
                 self.refresh();
             });
         }
     }
-
-    console.log('fieldElements');
-    console.log(self.elements)
 };
 
 //проверяет свободна ли клетка
@@ -95,21 +92,19 @@ Field.prototype.isCellFree = function (position) {
     var self = this;
     var result = true;
 
+
     self.elements.forEach(function (item) {
         if(item.position.vertical == position.vertical && item.position.horizontal == position.horizontal){
             result = false;
         }
     });
-    if(position.vertical < 0 || position.vertical > 300 || position.horizontal < 0 || position.horizontal > 300) {
-        result = false;
-    }
 
     return result;
 };
 
 Field.prototype.getElementByPosition = function (position) {
     var self = this;
-    var result;
+    var result = null;
 
     self.elements.forEach(function (element) {
         if(element.position.horizontal == position.horizontal && element.position.vertical == position.vertical){

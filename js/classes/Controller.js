@@ -18,35 +18,54 @@ Controller.prototype.moveElements = function (callback) {
     var vertical = 0;
     var horizontal = 0;
 
-    if(this.moveVector.top) {
+    if(self.moveVector.top) {
         vertical -= 100;
     }
-    if(this.moveVector.bottom) {
+    if(self.moveVector.bottom) {
         vertical += 100;
     }
-    if(this.moveVector.left) {
+    if(self.moveVector.left) {
         horizontal -= 100;
     }
-    if(this.moveVector.right) {
+    if(self.moveVector.right) {
         horizontal += 100;
     }
 
 
-    self.field.elements.forEach(function (element) {
+
+
+    self.field.elements.forEach(function (element, number) {
         var position = {
-            vertical: element.position.vertical += vertical,
-            horizontal: element.position.horizontal += horizontal
+            vertical: element.position.vertical + vertical,
+            horizontal: element.position.horizontal + horizontal
         };
 
+
         while (self.field.isCellFree(position)) {
-            element.move(position.vertical, position.horizontal);
+            element.move(vertical, horizontal);
+
             position.horizontal += horizontal;
-            position.vertical += vertical
+            position.vertical += vertical;
+
+            if(position.horizontal > 300){
+                position.horizontal = 300;
+            }
+            if(position.horizontal < 0){
+                position.horizontal = 0;
+            }
+            if(position.vertical > 300){
+                position.vertical = 300;
+            }
+            if(position.vertical < 0){
+                position.vertical = 0;
+            }
         }
 
         if(!self.field.isCellFree(position)){
-            if(element.value == self.field.getElementByPosition(position)){
-                self.field.getElementByPosition(position).setValue(element.value * 2);
+            var checkedElement = self.field.getElementByPosition(position);
+
+            if(element.value == checkedElement.value && element.id != checkedElement.id){
+                checkedElement.setValue(element.value * 2);
                 element = null;
             }
         }
@@ -71,6 +90,7 @@ Controller.prototype.init = function () {
 
         console.log('X1:' + event.clientX);
         console.log('Y1:' + event.clientY);
+
     };
 
     window.onmouseup = function (event) {
@@ -79,6 +99,7 @@ Controller.prototype.init = function () {
 
         console.log('X2:' + event.clientX);
         console.log('Y2:' + event.clientY);
+
 
         if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > 50 || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > 50){
             self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord, function () {

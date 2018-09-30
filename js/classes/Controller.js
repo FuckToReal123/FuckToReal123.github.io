@@ -49,6 +49,7 @@ Controller.prototype.moveElements = function (callback) {
 
     self.field.elements.sort(compareFunc);
 
+    console.log('moves до' + moves);
 
     self.field.elements.forEach(function (element, number, array) {
         var position = {
@@ -56,9 +57,26 @@ Controller.prototype.moveElements = function (callback) {
             horizontal: element.position.horizontal + horizontal
         };
 
+        if (position.horizontal > 300) {
+            position.horizontal = 300;
+        }
+        if (position.horizontal < 0) {
+            position.horizontal = 0;
+        }
+        if (position.vertical > 300) {
+            position.vertical = 300;
+        }
+        if (position.vertical < 0) {
+            position.vertical = 0;
+        }
+
+        console.log(position);
+        console.log(self.field.isCellFree(position));
+
 
         while (self.field.isCellFree(position)) {
             element.move(vertical, horizontal, function () {
+                console.log('было движение');
                 moves += 1;
             });
 
@@ -86,19 +104,21 @@ Controller.prototype.moveElements = function (callback) {
                 checkedElement.setValue(element.value * 2);
                 array[number].merged = true;
                 moves += 1;
+                console.log('было слияние');
             }
         }
     });
 
     self.field.elements = self.field.elements.filter(function(element) { return !element.merged; });
 
-    console.log('moves');
-    console.log(moves);
+    console.log('moves после ' + moves);
 
     if(callback !== undefined && moves !== 0){
         callback();
     } else {
-        alert('Game Over!');
+        if(!this.field.isFreeCells()){
+            alert('Game Over!');
+        }
     }
 };
 

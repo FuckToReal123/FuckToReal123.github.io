@@ -17,14 +17,10 @@ Field.prototype.refresh = function () {
         oldEllements[0].parentNode.removeChild(oldEllements[0]);
     }
 
-    console.log(self.elements);
-
     self.elements.forEach(function (item) {
         HTML += '<div class="thing t' + item.value + '" style="top: ' + item.position.vertical + 'px; left: ' +
             item.position.horizontal + 'px;"></div>';
     });
-
-    console.log(HTML);
 
     self.htmlElemnt.innerHTML += HTML;
 };

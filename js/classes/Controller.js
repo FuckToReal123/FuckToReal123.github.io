@@ -155,18 +155,13 @@ Controller.prototype.init = function () {
 Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, vertEnd, callback) {
     var self = this;
 
-    console.log(Math.abs(horizStart - horizEnd));
-    console.log(Math.abs(vertStart - vertEnd));
-
     if(Math.abs(horizEnd - horizStart) > Math.abs(vertEnd - vertStart)){
         if(horizStart < horizEnd){
-            console.log('право');
             self.moveVector.right = true;
             self.moveVector.top = false;
             self.moveVector.bottom = false;
             self.moveVector.left = false;
         } else {
-            console.log('лево');
             self.moveVector.left = true;
             self.moveVector.bottom = false;
             self.moveVector.top = false;
@@ -174,20 +169,17 @@ Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, 
         }
     } else {
         if(vertStart < vertEnd){
-            console.log('низ');
             self.moveVector.bottom = true;
             self.moveVector.right = false;
             self.moveVector.top = false;
             self.moveVector.left = false;
         } else {
-            console.log('верх');
             self.moveVector.top = true;
             self.moveVector.left = false;
             self.moveVector.bottom = false;
             self.moveVector.right = false;
         }
     }
-    console.log(self.moveVector);
     if(callback != undefined){
         callback();
     }

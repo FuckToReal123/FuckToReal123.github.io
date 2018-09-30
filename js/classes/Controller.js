@@ -9,6 +9,7 @@ function Controller(fieldSize) {
         right: false,
         left: false
     };
+    this.canNewAddGameItem = false;
 }
 
 //смещает все элементы в направлении moveVector

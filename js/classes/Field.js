@@ -76,18 +76,18 @@ Field.prototype.addElement = function () {
 
     if(!self.isFreeCells()){
         alert('Game Over');
-    }
-
-    if(self.isFreeCells()){
-        var probability = Math.random();
-        if(probability < 0.9){
-            self.insertElement(new GameItem(2, self.getRandomFreeCell()),function () {
-                self.refresh();
-            });
-        } else {
-            self.insertElement(new GameItem(4, self.getRandomFreeCell()),function () {
-                self.refresh();
-            });
+    } else {
+        if(self.isFreeCells()){
+            var probability = Math.random();
+            if(probability < 0.9){
+                self.insertElement(new GameItem(2, self.getRandomFreeCell()),function () {
+                    self.refresh();
+                });
+            } else {
+                self.insertElement(new GameItem(4, self.getRandomFreeCell()),function () {
+                    self.refresh();
+                });
+            }
         }
     }
 };

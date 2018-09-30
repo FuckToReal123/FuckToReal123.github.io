@@ -52,7 +52,7 @@ Field.prototype.getRandomFreeCell = function () {
    } else {
        for(var i = 0; i < self.elements.length; i++){
            var item = self.elements[i];
-           if(item.position.vertical == 100 * randomNumberHoriz && item.position.horizontal == 100 * randomNumberVert){
+           if(item.position.vertical == 100 * randomNumberVert && item.position.horizontal == 100 * randomNumberHoriz){
                return self.getRandomFreeCell();
            }
        }

@@ -18,18 +18,34 @@ Controller.prototype.moveElements = function (callback) {
     var vertical = 0;
     var horizontal = 0;
 
+    var compareFunc;
+
     if(self.moveVector.top) {
         vertical -= 100;
+        compareFunc = function (el1, el2) {
+            return (el2.position.vertical - el1.position.vertical) * -1;
+        };
     }
     if(self.moveVector.bottom) {
         vertical += 100;
+        compareFunc = function (el1, el2) {
+            return (el2.position.vertical - el2.position.vertical) * -1;
+        };
     }
     if(self.moveVector.left) {
         horizontal -= 100;
+        compareFunc = function (el1, el2) {
+            return (el2.position.horizontal - el1.position.horizontal) * -1;
+        };
     }
     if(self.moveVector.right) {
         horizontal += 100;
+        compareFunc = function (el1, el2) {
+            return (el1.position.horizontal - el2.position.horizontal) * -1;
+        };
     }
+
+    self.field.elements.sort(compareFunc);
 
 
     self.field.elements.forEach(function (element, number, array) {
@@ -63,7 +79,6 @@ Controller.prototype.moveElements = function (callback) {
             var checkedElement = self.field.getElementByPosition(position);
 
             if (element.value == checkedElement.value && element.id != checkedElement.id) {
-                alert('Сливаем элементы: 1.' + element.position.vertical + ' ' + element.position.horizontal + ' 2.' + checkedElement.position.vertical + ' ' + checkedElement.position.horizontal);
                 checkedElement.setValue(element.value * 2);
                 array[number].merged = true;
             }

@@ -11,7 +11,7 @@ function GameItem (value, position) {
     id += 1;
 }
 
-GameItem.prototype.move = function (vertical, horizontal) {
+GameItem.prototype.move = function (vertical, horizontal, callback) {
     this.position.horizontal += horizontal;
     this.position.vertical += vertical;
     if(this.position.horizontal > 300){
@@ -25,6 +25,9 @@ GameItem.prototype.move = function (vertical, horizontal) {
     }
     if(this.position.vertical < 0){
         this.position.vertical = 0;
+    }
+    if(callback !== undefined){
+        callback();
     }
 };
 

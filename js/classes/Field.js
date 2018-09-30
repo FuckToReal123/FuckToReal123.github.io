@@ -74,20 +74,16 @@ Field.prototype.isFreeCells = function () {
 Field.prototype.addElement = function () {
     var self = this;
 
-    if(!self.isFreeCells()){
-        alert('Game Over');
-    } else {
-        if(self.isFreeCells()){
-            var probability = Math.random();
-            if(probability < 0.9){
-                self.insertElement(new GameItem(2, self.getRandomFreeCell()),function () {
-                    self.refresh();
-                });
-            } else {
-                self.insertElement(new GameItem(4, self.getRandomFreeCell()),function () {
-                    self.refresh();
-                });
-            }
+    if (self.isFreeCells()) {
+        var probability = Math.random();
+        if (probability < 0.9) {
+            self.insertElement(new GameItem(2, self.getRandomFreeCell()), function () {
+                self.refresh();
+            });
+        } else {
+            self.insertElement(new GameItem(4, self.getRandomFreeCell()), function () {
+                self.refresh();
+            });
         }
     }
 };

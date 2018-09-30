@@ -9,7 +9,6 @@ function Controller(fieldSize) {
         right: false,
         left: false
     };
-    this.canNewAddGameItem = false;
 }
 
 //смещает все элементы в направлении moveVector
@@ -20,6 +19,8 @@ Controller.prototype.moveElements = function (callback) {
     var horizontal = 0;
 
     var compareFunc;
+
+    var moves = 0;
 
     if(self.moveVector.top) {
         vertical -= 100;
@@ -57,7 +58,9 @@ Controller.prototype.moveElements = function (callback) {
 
 
         while (self.field.isCellFree(position)) {
-            element.move(vertical, horizontal);
+            element.move(vertical, horizontal, function () {
+                moves += 1;
+            });
 
             position.horizontal += horizontal;
             position.vertical += vertical;
@@ -82,14 +85,20 @@ Controller.prototype.moveElements = function (callback) {
             if (element.value == checkedElement.value && element.id != checkedElement.id) {
                 checkedElement.setValue(element.value * 2);
                 array[number].merged = true;
+                moves += 1;
             }
         }
     });
 
     self.field.elements = self.field.elements.filter(function(element) { return !element.merged; });
 
-    if(callback !== undefined){
+    console.log('moves');
+    console.log(moves);
+
+    if(callback !== undefined && moves !== 0){
         callback();
+    } else {
+        alert('Game Over!');
     }
 };
 

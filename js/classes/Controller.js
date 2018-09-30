@@ -23,13 +23,13 @@ Controller.prototype.moveElements = function (callback) {
     if(self.moveVector.top) {
         vertical -= 100;
         compareFunc = function (el1, el2) {
-            return (el2.position.vertical - el1.position.vertical) * -1;
+            return (el2.position.vertical - el2.position.vertical) * -1;
         };
     }
     if(self.moveVector.bottom) {
         vertical += 100;
         compareFunc = function (el1, el2) {
-            return (el2.position.vertical - el2.position.vertical) * -1;
+            return (el1.position.vertical - el2.position.vertical) * -1;
         };
     }
     if(self.moveVector.left) {

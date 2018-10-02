@@ -1,5 +1,7 @@
 import Controller from './classes/Controller.js';
 
-var controller = new Controller(4);
+var defaultGameFieldSize = 4;
+
+var controller = new Controller(defaultGameFieldSize);
 
 controller.init();

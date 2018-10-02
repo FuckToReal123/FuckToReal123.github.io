@@ -1,19 +1,48 @@
 import Field from './Field.js';
-import GameItem from "./GameItem";
 
 function Controller(fieldSize) {
     this.field = new Field(fieldSize);
-    this.moveVector = {//объект хранящий 4 bool значения: top, bottom, left, right
-        top: false,
-        bottom: false,
-        right: false,
-        left: false
+    this.moveVector = {
+        x: 0,
+        y: 0
     };
 }
 
+Controller.prototype.validatePosition = function (position) {
+    var result = {
+        vertical: 0,
+        horizontal: 0
+    };
+
+    if(position.vertical > 300){
+        result.vertical = 300;
+    } else {
+        if(position.vertical < 0){
+            result.vertical = 0;
+        } else {
+            result.vertical = position.vertical;
+        }
+    }
+
+    if(position.horizontal > 300){
+        result.horizontal = 300
+    } else {
+        if(position.horizontal < 0){
+            result.horizontal = 0;
+        } else {
+            result.horizontal = position.horizontal;
+        }
+    }
+
+
+    return result;
+};
+
 //смещает все элементы в направлении moveVector
-Controller.prototype.moveElements = function (callback) {
+Controller.prototype.moveElements = function () {
     var self = this;
+
+    var gameItemSize = 100;
 
     var vertical = 0;
     var horizontal = 0;
@@ -22,34 +51,33 @@ Controller.prototype.moveElements = function (callback) {
 
     var moves = 0;
 
-    if(self.moveVector.top) {
-        vertical -= 100;
+    if(self.moveVector.y == -1) {
+        vertical -= gameItemSize;
         compareFunc = function (el1, el2) {
             return (el2.position.vertical - el1.position.vertical) * -1;
         };
     }
-    if(self.moveVector.bottom) {
-        vertical += 100;
+    if(self.moveVector.y == 1) {
+        vertical += gameItemSize;
         compareFunc = function (el1, el2) {
             return (el1.position.vertical - el2.position.vertical) * -1;
         };
     }
-    if(self.moveVector.left) {
-        horizontal -= 100;
+    if(self.moveVector.x == -1) {
+        horizontal -= gameItemSize;
         compareFunc = function (el1, el2) {
             return (el2.position.horizontal - el1.position.horizontal) * -1;
         };
     }
-    if(self.moveVector.right) {
-        horizontal += 100;
+    if(self.moveVector.x == 1) {
+        horizontal += gameItemSize;
         compareFunc = function (el1, el2) {
             return (el1.position.horizontal - el2.position.horizontal) * -1;
         };
     }
 
     self.field.elements.sort(compareFunc);
-
-    console.log('moves до' + moves);
+    console.log(self.field.elements);
 
     self.field.elements.forEach(function (element, number, array) {
         var position = {
@@ -57,44 +85,20 @@ Controller.prototype.moveElements = function (callback) {
             horizontal: element.position.horizontal + horizontal
         };
 
-        if (position.horizontal > 300) {
-            position.horizontal = 300;
-        }
-        if (position.horizontal < 0) {
-            position.horizontal = 0;
-        }
-        if (position.vertical > 300) {
-            position.vertical = 300;
-        }
-        if (position.vertical < 0) {
-            position.vertical = 0;
-        }
+        console.log('Двигаем элемент на позиции');
+        console.log(element.position);
 
-        console.log(position);
-        console.log(self.field.isCellFree(position));
+        while (self.field.isCellFree(self.validatePosition(position))) {
+            console.log('Двигаем элемент на позицию');
+            console.log(position);
+            element.move(vertical, horizontal);
+            moves += 1;
 
+            console.log('Теперь элемент на позиции');
+            console.log(element.position);
 
-        while (self.field.isCellFree(position)) {
-            element.move(vertical, horizontal, function () {
-                console.log('было движение');
-                moves += 1;
-            });
-
-            position.horizontal += horizontal;
             position.vertical += vertical;
-
-            if (position.horizontal > 300) {
-                position.horizontal = 300;
-            }
-            if (position.horizontal < 0) {
-                position.horizontal = 0;
-            }
-            if (position.vertical > 300) {
-                position.vertical = 300;
-            }
-            if (position.vertical < 0) {
-                position.vertical = 0;
-            }
+            position.horizontal += horizontal;
         }
 
         if (!self.field.isCellFree(position)) {
@@ -104,17 +108,14 @@ Controller.prototype.moveElements = function (callback) {
                 checkedElement.setValue(element.value * 2);
                 array[number].merged = true;
                 moves += 1;
-                console.log('было слияние');
             }
         }
     });
 
     self.field.elements = self.field.elements.filter(function(element) { return !element.merged; });
 
-    console.log('moves после ' + moves);
-
-    if(callback !== undefined && moves !== 0){
-        callback();
+    if(moves !== 0){
+        self.field.addElement();
     } else {
         if(!this.field.isFreeCells()){
             alert('Game Over!');
@@ -140,11 +141,8 @@ Controller.prototype.init = function () {
         mouseEndVertCoord = event.clientY;
 
         if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > 50 || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > 50){
-            self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord, function () {
-                self.moveElements(function () {
-                    self.field.addElement();
-                });
-            });
+            self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord);
+            self.moveElements();
         }
     };
 
@@ -152,36 +150,25 @@ Controller.prototype.init = function () {
 };
 
 //получает вектор направления движения
-Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, vertEnd, callback) {
+Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, vertEnd) {
     var self = this;
 
     if(Math.abs(horizEnd - horizStart) > Math.abs(vertEnd - vertStart)){
         if(horizStart < horizEnd){
-            self.moveVector.right = true;
-            self.moveVector.top = false;
-            self.moveVector.bottom = false;
-            self.moveVector.left = false;
+            self.moveVector.x = 1;
+            self.moveVector.y = 0;
         } else {
-            self.moveVector.left = true;
-            self.moveVector.bottom = false;
-            self.moveVector.top = false;
-            self.moveVector.right = false;
+            self.moveVector.x = -1;
+            self.moveVector.y = 0;
         }
     } else {
         if(vertStart < vertEnd){
-            self.moveVector.bottom = true;
-            self.moveVector.right = false;
-            self.moveVector.top = false;
-            self.moveVector.left = false;
+            self.moveVector.x = 0;
+            self.moveVector.y = 1;
         } else {
-            self.moveVector.top = true;
-            self.moveVector.left = false;
-            self.moveVector.bottom = false;
-            self.moveVector.right = false;
+            self.moveVector.x = 0;
+            self.moveVector.y = -1;
         }
-    }
-    if(callback != undefined){
-        callback();
     }
 };
 

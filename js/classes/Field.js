@@ -22,43 +22,40 @@ Field.prototype.refresh = function () {
             item.position.horizontal + 'px;"></div>';
     });
 
+    console.log(HTML);
+
     self.htmlElemnt.innerHTML += HTML;
 };
 
-Field.prototype.insertElement = function (element, callback) {
+Field.prototype.insertElement = function (element) {
     this.elements.push(element);
-    if(callback != undefined){
-        callback();
-    }
 };
 
 //возвращает позицию случайно клетки поля, доступной для заполнения
 Field.prototype.getRandomFreeCell = function () {
     var self = this;
-    var result;
+    var avalibleCells = [];
 
-    var randomNumberHoriz = parseInt(Math.random() * 10 % 4);
-    var randomNumberVert = parseInt(Math.random() * 10 % 4);
+    var gameItemSize = 100;
 
-   if(self.elements.length == 0){
-       result = {
-           horizontal: 100 * randomNumberHoriz,
-           vertical: 100 * randomNumberVert
-       }
-   } else {
-       for(var i = 0; i < self.elements.length; i++){
-           var item = self.elements[i];
-           if(item.position.vertical == 100 * randomNumberVert && item.position.horizontal == 100 * randomNumberHoriz){
-               return self.getRandomFreeCell();
+   for(var i = 0; i < self.size; i++) {
+       for(var j = 0; j < self.size; j++) {
+           var checkedPosition = {
+               vertical: i * gameItemSize,
+               horizontal: j * gameItemSize
+           };
+           if(self.isCellFree(checkedPosition)){
+              avalibleCells.push(checkedPosition);
            }
-       }
-       result = {
-           horizontal: 100 * randomNumberHoriz,
-           vertical: 100 * randomNumberVert
        }
    }
 
-   return result;
+   var randomNumber = parseInt(Math.random() * gameItemSize % avalibleCells.length);
+
+   console.log(avalibleCells);
+   console.log(randomNumber);
+
+   return avalibleCells[randomNumber];
 };
 
 //есть ли свободные клетки на поле?
@@ -73,14 +70,11 @@ Field.prototype.addElement = function () {
     if (self.isFreeCells()) {
         var probability = Math.random();
         if (probability < 0.9) {
-            self.insertElement(new GameItem(2, self.getRandomFreeCell()), function () {
-                self.refresh();
-            });
+            self.insertElement(new GameItem(2, self.getRandomFreeCell()));
         } else {
-            self.insertElement(new GameItem(4, self.getRandomFreeCell()), function () {
-                self.refresh();
-            });
+            self.insertElement(new GameItem(4, self.getRandomFreeCell()));
         }
+        self.refresh();
     }
 };
 
@@ -88,14 +82,10 @@ Field.prototype.addElement = function () {
 Field.prototype.isCellFree = function (position) {
     var self = this;
     var result = true;
-
-    self.elements.forEach(function (item) {
-        if(!item.merged){
-            if(item.position.vertical == position.vertical && item.position.horizontal == position.horizontal){
-                result = false;
-            }
-        }
-    });
+    
+    if(self.getElementByPosition(position)){
+        result = false;
+    }
 
     return result;
 };
@@ -104,10 +94,8 @@ Field.prototype.getElementByPosition = function (position) {
     var self = this;
     var result = null;
 
-    self.elements.forEach(function (element) {
-        if(element.position.horizontal == position.horizontal && element.position.vertical == position.vertical){
-            result = element;
-        }
+    result = self.elements.find(function (element) {
+        return !element.merged && (element.position.vertical == position.vertical && element.position.horizontal == position.horizontal)
     });
 
     return result;

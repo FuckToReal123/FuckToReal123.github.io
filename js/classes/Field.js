@@ -22,8 +22,6 @@ Field.prototype.refresh = function () {
             item.position.horizontal + 'px;"></div>';
     });
 
-    console.log(HTML);
-
     self.htmlElemnt.innerHTML += HTML;
 };
 
@@ -51,9 +49,6 @@ Field.prototype.getRandomFreeCell = function () {
    }
 
    var randomNumber = parseInt(Math.random() * gameItemSize % avalibleCells.length);
-
-   console.log(avalibleCells);
-   console.log(randomNumber);
 
    return avalibleCells[randomNumber];
 };

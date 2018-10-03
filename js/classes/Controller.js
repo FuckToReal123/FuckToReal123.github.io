@@ -125,13 +125,13 @@ Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, 
             self.moveVector.x = 1;
             self.moveVector.y = 0;
             self.moveVector.compareFunc = function (el1, el2) {
-                return (el1.position.horizontal - el2.position.horizontal) * -1;
+                return el2.position.horizontal - el1.position.horizontal;
             };
         } else {
             self.moveVector.x = -1;
             self.moveVector.y = 0;
             self.moveVector.compareFunc = function (el1, el2) {
-                return (el2.position.horizontal - el1.position.horizontal) * -1;
+                return el1.position.horizontal - el2.position.horizontal;
             };
         }
     } else {
@@ -139,13 +139,13 @@ Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, 
             self.moveVector.x = 0;
             self.moveVector.y = 1;
             self.moveVector.compareFunc = function (el1, el2) {
-                return (el1.position.vertical - el2.position.vertical) * -1;
+                return el2.position.vertical - el1.position.vertical;
             };
         } else {
             self.moveVector.x = 0;
             self.moveVector.y = -1;
             self.moveVector.compareFunc = function (el1, el2) {
-                return (el2.position.vertical - el1.position.vertical) * -1;
+                return el1.position.vertical - el2.position.vertical;
             };
         }
     }

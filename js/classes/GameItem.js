@@ -1,7 +1,6 @@
 var id = 0;
 
 function GameItem (value, position) {
-    this.htmlElemnt;//элемент в вёрстке
     this.value = value;//номинал элемента
     this.position = {//объект с координатами элемента
         vertical: position.vertical,

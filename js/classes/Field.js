@@ -18,7 +18,7 @@ Field.prototype.refresh = function () {
     }
 
     self.elements.forEach(function (item) {
-        HTML += '<div class="thing t' + item.value + '" style="top: ' + item.position.vertical + 'px; left: ' +
+        HTML += '<div class="thing t' + item.value + '" id="' + item.id + '" style="top: ' + item.position.vertical + 'px; left: ' +
             item.position.horizontal + 'px;"></div>';
     });
 
@@ -69,6 +69,7 @@ Field.prototype.addElement = function () {
         } else {
             self.insertElement(new GameItem(4, self.getRandomFreeCell()));
         }
+
         self.refresh();
     }
 };
@@ -91,6 +92,17 @@ Field.prototype.getElementByPosition = function (position) {
 
     result = self.elements.find(function (element) {
         return !element.merged && (element.position.vertical == position.vertical && element.position.horizontal == position.horizontal)
+    });
+
+    return result;
+};
+
+Field.prototype.getElementById = function (id) {
+    var self = this;
+    var result = null;
+
+    result = self.elements.find(function (element) {
+        return element.id == id;
     });
 
     return result;

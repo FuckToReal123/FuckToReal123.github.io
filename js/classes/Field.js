@@ -11,6 +11,8 @@ Field.prototype.refresh = function () {
     var self = this;
     var HTML = '';
 
+    var duration = 420;
+
     setTimeout(function () {
         var oldEllements = self.htmlElemnt.getElementsByClassName('thing');
 
@@ -24,7 +26,7 @@ Field.prototype.refresh = function () {
         });
 
         self.htmlElemnt.innerHTML += HTML;
-    }, 500);
+    }, duration);
 
 };
 
@@ -95,17 +97,6 @@ Field.prototype.getElementByPosition = function (position) {
 
     result = self.elements.find(function (element) {
         return !element.merged && (element.position.vertical == position.vertical && element.position.horizontal == position.horizontal)
-    });
-
-    return result;
-};
-
-Field.prototype.getElementById = function (id) {
-    var self = this;
-    var result = null;
-
-    result = self.elements.find(function (element) {
-        return element.id == id;
     });
 
     return result;

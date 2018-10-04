@@ -17,7 +17,7 @@ GameItem.prototype.move = function (position) {
     this.position.vertical = position.vertical;
 
     var self = this;
-    var duration = 450;
+    var duration = 400;
 
     $(self.htmlElemnt).animate({
         left: self.position.horizontal + 'px',

@@ -74,15 +74,28 @@ Controller.prototype.moveElements = function () {
             position.horizontal += horizontal;
         }
 
-        element.move(self.validatePosition(position));
-
         var checkedElement = self.field.getElementByPosition(self.validatePosition(position));
 
-
-        if (element.value == checkedElement.value && element.id != checkedElement.id) {
+        if (!!checkedElement && element.value == checkedElement.value && element.id != checkedElement.id) {
             checkedElement.setValue(element.value * 2);
+
+            var vertShift = self.moveVector.y == 0 ? 0 : gameItemSize / 2;
+            var horizShift = self.moveVector.x == 0 ? 0 : gameItemSize / 2;
+
+            var mergedPosition = {
+                vertical: self.validatePosition(position).vertical - vertShift,
+                horizontal: self.validatePosition(position).horizontal - horizShift
+            };
+
+            element.move(mergedPosition);
             array[number].merged = true;
             moves += 1;
+        } else {
+            var lastAvaliblePosition = {
+                vertical: position.vertical - vertical,
+                horizontal: position.horizontal - horizontal
+            };
+            element.move(self.validatePosition(lastAvaliblePosition));
         }
     });
 
@@ -95,6 +108,32 @@ Controller.prototype.moveElements = function () {
             alert('Game Over!');
         }
     }
+};
+
+Controller.prototype.init = function () {
+    var self = this;
+
+    var mouseStartHorizCoord = 0;
+    var mouseStartVertCoord = 0;
+    var mouseEndHorizCoord = 0;
+    var mouseEndVertCoord = 0;
+
+    window.onmousedown = function (event) {
+        mouseStartHorizCoord = event.clientX;
+        mouseStartVertCoord = event.clientY;
+    };
+
+    window.onmouseup = function (event) {
+        mouseEndHorizCoord = event.clientX;
+        mouseEndVertCoord = event.clientY;
+
+        if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > 50 || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > 50){
+            self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord);
+            self.moveElements();
+        }
+    };
+
+    self.field.addElement();
 };
 
 Controller.prototype.init = function () {

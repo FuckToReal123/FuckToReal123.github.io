@@ -11,18 +11,21 @@ Field.prototype.refresh = function () {
     var self = this;
     var HTML = '';
 
-    var oldEllements = self.htmlElemnt.getElementsByClassName('thing');
+    setTimeout(function () {
+        var oldEllements = self.htmlElemnt.getElementsByClassName('thing');
 
-    while (oldEllements[0]){
-        oldEllements[0].parentNode.removeChild(oldEllements[0]);
-    }
+        while (oldEllements[0]){
+            oldEllements[0].parentNode.removeChild(oldEllements[0]);
+        }
 
-    self.elements.forEach(function (item) {
-        HTML += '<div class="thing t' + item.value + '" id="' + item.id + '" style="top: ' + item.position.vertical + 'px; left: ' +
-            item.position.horizontal + 'px;"></div>';
-    });
+        self.elements.forEach(function (item) {
+            HTML += '<div class="thing t' + item.value + '" id="' + item.id + '" style="top: ' + item.position.vertical + 'px; left: ' +
+                item.position.horizontal + 'px;"></div>';
+        });
 
-    self.htmlElemnt.innerHTML += HTML;
+        self.htmlElemnt.innerHTML += HTML;
+    }, 500);
+
 };
 
 Field.prototype.insertElement = function (element) {

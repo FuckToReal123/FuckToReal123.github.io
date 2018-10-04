@@ -41,6 +41,12 @@ Controller.prototype.validatePosition = function (position) {
     return result;
 };
 
+Controller.prototype.isMoveAvalible = function (position) {
+    var self = this;
+    var validatedPosition = self.validatePosition(position);
+    return self.field.isCellFree(position) && position.vertical == validatedPosition.vertical && position.horizontal == validatedPosition.horizontal;
+};
+
 //смещает все элементы в направлении moveVector
 Controller.prototype.moveElements = function () {
     var self = this;
@@ -61,16 +67,17 @@ Controller.prototype.moveElements = function () {
             horizontal: element.position.horizontal + horizontal
         };
 
-        while (self.field.isCellFree(self.validatePosition(position))) {
-            element.move(vertical, horizontal);
+        while (self.isMoveAvalible(position)) {
             moves += 1;
-
 
             position.vertical += vertical;
             position.horizontal += horizontal;
         }
 
+        element.move(self.validatePosition(position));
+
         var checkedElement = self.field.getElementByPosition(self.validatePosition(position));
+
 
         if (element.value == checkedElement.value && element.id != checkedElement.id) {
             checkedElement.setValue(element.value * 2);

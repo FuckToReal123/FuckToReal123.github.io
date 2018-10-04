@@ -6,13 +6,23 @@ function GameItem (value, position) {
         vertical: position.vertical,
         horizontal: position.horizontal
     };
+    this.htmlElement;
     this.id = id;
     id += 1;
 }
 
-GameItem.prototype.move = function (vertical, horizontal) {
-    this.position.horizontal += horizontal;
-    this.position.vertical += vertical;
+GameItem.prototype.move = function (position) {
+    this.htmlElemnt = document.getElementById(this.id);
+    this.position.horizontal = position.horizontal;
+    this.position.vertical = position.vertical;
+
+    var self = this;
+    var duration = 450;
+
+    $(self.htmlElemnt).animate({
+        left: self.position.horizontal + 'px',
+        top: self.position.vertical + 'px'
+    }, duration);
 };
 
 GameItem.prototype.setValue = function (value) {

@@ -136,32 +136,6 @@ Controller.prototype.init = function () {
     self.field.addElement();
 };
 
-Controller.prototype.init = function () {
-    var self = this;
-
-    var mouseStartHorizCoord = 0;
-    var mouseStartVertCoord = 0;
-    var mouseEndHorizCoord = 0;
-    var mouseEndVertCoord = 0;
-
-    window.onmousedown = function (event) {
-        mouseStartHorizCoord = event.clientX;
-        mouseStartVertCoord = event.clientY;
-    };
-
-    window.onmouseup = function (event) {
-        mouseEndHorizCoord = event.clientX;
-        mouseEndVertCoord = event.clientY;
-
-        if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > 50 || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > 50){
-            self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord);
-            self.moveElements();
-        }
-    };
-
-    self.field.addElement();
-};
-
 //получает вектор направления движения
 Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, vertEnd) {
     var self = this;

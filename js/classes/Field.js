@@ -1,4 +1,6 @@
-import GameItem from './GameItem.js'
+import GameItem from './GameItem.js';
+import constants from '../lib/constants.js';
+import functions from '../lib/functions.js'
 
 function Field(size) {
     this.htmlElemnt = document.getElementById('playfield');//элемент в вёрстке
@@ -39,7 +41,7 @@ Field.prototype.getRandomFreeCell = function () {
     var self = this;
     var avalibleCells = [];
 
-    var gameItemSize = 100;
+    var gameItemSize = constants.DEFAULT_GAME_ITEM_SIZE;
 
    for(var i = 0; i < self.size; i++) {
        for(var j = 0; j < self.size; j++) {
@@ -53,7 +55,9 @@ Field.prototype.getRandomFreeCell = function () {
        }
    }
 
-   var randomNumber = parseInt(Math.random() * gameItemSize % avalibleCells.length);
+   var randomNumber = functions.randomInt(0, avalibleCells.length - 1);
+   console.log(randomNumber);
+   console.log(avalibleCells);
 
    return avalibleCells[randomNumber];
 };

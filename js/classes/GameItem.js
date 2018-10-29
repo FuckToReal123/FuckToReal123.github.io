@@ -1,3 +1,5 @@
+import constants from "../lib/constants";
+
 var id = 0;
 
 function GameItem (value, position) {
@@ -17,12 +19,11 @@ GameItem.prototype.move = function (position) {
     this.position.vertical = position.vertical;
 
     var self = this;
-    var duration = 400;
 
     $(self.htmlElemnt).animate({
         left: self.position.horizontal + 'px',
         top: self.position.vertical + 'px'
-    }, duration);
+    }, constants.GAME_ITEM_MOVE_DURATION);
 };
 
 GameItem.prototype.setValue = function (value) {

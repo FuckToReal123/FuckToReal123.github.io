@@ -1,4 +1,5 @@
 import Field from './Field.js';
+import constants from "../lib/constants";
 
 function Controller(fieldSize) {
     this.field = new Field(fieldSize);
@@ -15,10 +16,8 @@ Controller.prototype.validatePosition = function (position) {
         horizontal: 0
     };
 
-    var gameItemSize = 100;
-
-    if(position.vertical > (this.field.size - 1) * gameItemSize){
-        result.vertical = (this.field.size - 1) * gameItemSize;
+    if(position.vertical > (this.field.size - 1) * constants.DEFAULT_GAME_ITEM_SIZE){
+        result.vertical = (this.field.size - 1) * constants.DEFAULT_GAME_ITEM_SIZE;
     } else {
         if(position.vertical < 0){
             result.vertical = 0;
@@ -27,8 +26,8 @@ Controller.prototype.validatePosition = function (position) {
         }
     }
 
-    if(position.horizontal > (this.field.size - 1) * gameItemSize){
-        result.horizontal = (this.field.size - 1) * gameItemSize
+    if(position.horizontal > (this.field.size - 1) * constants.DEFAULT_GAME_ITEM_SIZE){
+        result.horizontal = (this.field.size - 1) * constants.DEFAULT_GAME_ITEM_SIZE
     } else {
         if(position.horizontal < 0){
             result.horizontal = 0;
@@ -51,10 +50,8 @@ Controller.prototype.isMoveAvalible = function (position) {
 Controller.prototype.moveElements = function () {
     var self = this;
 
-    var gameItemSize = 100;
-
-    var vertical = self.moveVector.y * gameItemSize;
-    var horizontal = self.moveVector.x * gameItemSize;
+    var vertical = self.moveVector.y * constants.DEFAULT_GAME_ITEM_SIZE;
+    var horizontal = self.moveVector.x * constants.DEFAULT_GAME_ITEM_SIZE;
 
     var moves = 0;
 
@@ -63,39 +60,40 @@ Controller.prototype.moveElements = function () {
 
     self.field.elements.forEach(function (element, number, array) {
         var position = {
+            vertical: element.position.vertical,
+            horizontal: element.position.horizontal
+        };
+
+        var checkedPosition = {
             vertical: element.position.vertical + vertical,
             horizontal: element.position.horizontal + horizontal
         };
 
-        while (self.isMoveAvalible(position)) {
+        while (self.isMoveAvalible(checkedPosition)) {
             moves += 1;
-
-            position.vertical += vertical;
-            position.horizontal += horizontal;
+            position.horizontal = checkedPosition.horizontal;
+            position.vertical = checkedPosition.vertical;
+            checkedPosition.vertical += vertical;
+            checkedPosition.horizontal += horizontal;
         }
-
-        var checkedElement = self.field.getElementByPosition(self.validatePosition(position));
+        var checkedElement = self.field.getElementByPosition(self.validatePosition(checkedPosition));
 
         if (!!checkedElement && element.value == checkedElement.value && element.id != checkedElement.id) {
             checkedElement.setValue(element.value * 2);
 
-            var vertShift = self.moveVector.y == 0 ? 0 : gameItemSize / 2;
-            var horizShift = self.moveVector.x == 0 ? 0 : gameItemSize / 2;
+            var vertShift = self.moveVector.y == 0 ? 0 : constants.DEFAULT_GAME_ITEM_SIZE / 2;
+            var horizShift = self.moveVector.x == 0 ? 0 : constants.DEFAULT_GAME_ITEM_SIZE / 2;
 
             var mergedPosition = {
-                vertical: self.validatePosition(position).vertical - vertShift,
-                horizontal: self.validatePosition(position).horizontal - horizShift
+                vertical: self.validatePosition(checkedPosition).vertical - vertShift,
+                horizontal: self.validatePosition(checkedPosition).horizontal - horizShift
             };
 
             element.move(mergedPosition);
             array[number].merged = true;
             moves += 1;
         } else {
-            var lastAvaliblePosition = {
-                vertical: position.vertical - vertical,
-                horizontal: position.horizontal - horizontal
-            };
-            element.move(self.validatePosition(lastAvaliblePosition));
+            element.move(self.validatePosition(position));
         }
     });
 
@@ -127,8 +125,8 @@ Controller.prototype.init = function () {
         mouseEndHorizCoord = event.clientX;
         mouseEndVertCoord = event.clientY;
 
-        if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > 50 || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > 50){
-            self.getMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord);
+        if(Math.abs(mouseStartHorizCoord - mouseEndHorizCoord) > constants.MINIMAL_MOUSE_SHIFT || Math.abs(mouseStartVertCoord - mouseEndVertCoord) > constants.MINIMAL_MOUSE_SHIFT){
+            self.setMoveVector(mouseStartHorizCoord, mouseEndHorizCoord, mouseStartVertCoord, mouseEndVertCoord);
             self.moveElements();
         }
     };
@@ -137,7 +135,7 @@ Controller.prototype.init = function () {
 };
 
 //получает вектор направления движения
-Controller.prototype.getMoveVector = function (horizStart, horizEnd, vertStart, vertEnd) {
+Controller.prototype.setMoveVector = function (horizStart, horizEnd, vertStart, vertEnd) {
     var self = this;
 
     if(Math.abs(horizEnd - horizStart) > Math.abs(vertEnd - vertStart)){

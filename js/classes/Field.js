@@ -13,8 +13,6 @@ Field.prototype.refresh = function () {
     var self = this;
     var HTML = '';
 
-    var duration = 420;
-
     setTimeout(function () {
         var oldEllements = self.htmlElemnt.getElementsByClassName('thing');
 
@@ -28,7 +26,7 @@ Field.prototype.refresh = function () {
         });
 
         self.htmlElemnt.innerHTML += HTML;
-    }, duration);
+    }, constants.GAME_FIELD_REFRESH_DURATION);
 
 };
 
@@ -56,8 +54,6 @@ Field.prototype.getRandomFreeCell = function () {
    }
 
    var randomNumber = functions.randomInt(0, avalibleCells.length - 1);
-   console.log(randomNumber);
-   console.log(avalibleCells);
 
    return avalibleCells[randomNumber];
 };

@@ -1,5 +1,6 @@
 import Field from './Field.js';
 import constants from "../lib/constants";
+import View from  "./View.js";
 
 function Controller(fieldSize) {
     this.field = new Field(fieldSize);
@@ -8,6 +9,7 @@ function Controller(fieldSize) {
         y: 0,
         compareFunc: undefined
     };
+    this.view = View.getInstance();
 }
 
 Controller.prototype.makePositionValid = function (position) {
@@ -91,10 +93,12 @@ Controller.prototype.moveElements = function () {
             };
 
             element.move(self.makePositionValid(mergedPosition));
+            self.view.moveGameItem(element);
             array[number].merged = true;
             moves += 1;
         } else {
             element.move(self.makePositionValid(position));
+            self.view.moveGameItem(element);
         }
     });
 
@@ -102,6 +106,7 @@ Controller.prototype.moveElements = function () {
 
     if(moves !== 0){
         self.field.addElement();
+        self.view.refreshField(self.field);
     } else {
         if(!this.field.isFreeCells()){
             alert('Game Over!');
@@ -133,6 +138,7 @@ Controller.prototype.init = function () {
     };
 
     self.field.addElement();
+    self.view.refreshField(self.field);
 };
 
 //получает вектор направления движения

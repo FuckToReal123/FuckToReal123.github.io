@@ -9,17 +9,12 @@ function GameItem (value, position) {
         horizontal: position.horizontal
     };
     this.id = id;
-    this.view = View.getInstance();
     id += 1;
 }
 
 GameItem.prototype.move = function (position) {
     this.position.horizontal = position.horizontal;
     this.position.vertical = position.vertical;
-
-    var self = this;
-
-    self.view.moveGameItem(self);
 };
 
 GameItem.prototype.setValue = function (value) {

@@ -2,7 +2,7 @@ import constants from "../lib/constants";
 
 //применяем синглтон
 var View = (function () {
-    var instance;
+    var instance;//экземпляр класса
 
     var refreshField =  function (field) {
         var fieldHtmlElement = document.getElementById(constants.GAME_FIELD_HTML_CLASS);
@@ -34,7 +34,7 @@ var View = (function () {
         }, constants.GAME_ITEM_MOVE_DURATION);
     };
 
-    var createInstance = function () {
+    var createInstance = function () { //создаём экземпляр класса
         return {
             refreshField: refreshField,
             moveGameItem: moveGameItem
@@ -42,7 +42,7 @@ var View = (function () {
     };
 
     return {
-        getInstance: function () {
+        getInstance: function () {// если экземпляр создан, то возврааем его иначе создаём новый и возвращаем
             return instance || (instance = createInstance());
         }
     }

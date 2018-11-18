@@ -6,16 +6,9 @@ import View from  "./View.js";
 function Field(size) {
     this.size = size;//размер стороны поля
     this.elements = [];//массив массивов с объектами GameItem
-    this.view = View.getInstance();
 }
 
-//метод обновления состояния поля
-Field.prototype.refresh = function () {
-    var self = this;
-
-    self.view.refreshField(self);
-};
-
+//вставка нового элемента
 Field.prototype.insertElement = function (element) {
     this.elements.push(element);
 };
@@ -60,8 +53,6 @@ Field.prototype.addElement = function () {
         } else {//если вероятность больше либо равна 9/10
             self.insertElement(new GameItem(4, self.getRandomFreeCell()));
         }
-
-        self.refresh();
     }
 };
 

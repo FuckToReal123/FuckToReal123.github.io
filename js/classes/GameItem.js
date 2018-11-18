@@ -9,6 +9,7 @@ function GameItem (value, position) {
         horizontal: position.horizontal
     };
     this.id = id;
+    this.view = View.getInstance();
     id += 1;
 }
 
@@ -18,7 +19,7 @@ GameItem.prototype.move = function (position) {
 
     var self = this;
 
-    View.moveGameItem(self);
+    self.view.moveGameItem(self);
 };
 
 GameItem.prototype.setValue = function (value) {

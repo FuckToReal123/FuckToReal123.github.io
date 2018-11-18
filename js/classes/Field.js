@@ -6,13 +6,14 @@ import View from  "./View.js";
 function Field(size) {
     this.size = size;//размер стороны поля
     this.elements = [];//массив массивов с объектами GameItem
+    this.view = View.getInstance();
 }
 
 //метод обновления состояния поля
 Field.prototype.refresh = function () {
     var self = this;
 
-    View.refreshField(self);
+    self.view.refreshField(self);
 };
 
 Field.prototype.insertElement = function (element) {

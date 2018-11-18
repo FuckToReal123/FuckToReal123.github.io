@@ -10,7 +10,7 @@ function Controller(fieldSize) {
     };
 }
 
-Controller.prototype.validatePosition = function (position) {
+Controller.prototype.makePositionValid = function (position) {
     var result = {
         vertical: 0,
         horizontal: 0
@@ -42,7 +42,7 @@ Controller.prototype.validatePosition = function (position) {
 
 Controller.prototype.isMoveAvalible = function (position) {
     var self = this;
-    var validatedPosition = self.validatePosition(position);
+    var validatedPosition = self.makePositionValid(position);
     return self.field.isCellFree(position) && position.vertical == validatedPosition.vertical && position.horizontal == validatedPosition.horizontal;
 };
 
@@ -59,12 +59,12 @@ Controller.prototype.moveElements = function () {
     self.field.elements.sort(self.moveVector.compareFunc);
 
     self.field.elements.forEach(function (element, number, array) {
-        var position = {
+        var position = {//текущая позиция сдвигаемого элемента
             vertical: element.position.vertical,
             horizontal: element.position.horizontal
         };
 
-        var checkedPosition = {
+        var checkedPosition = {//позиция на которую предполагается сдвиг
             vertical: element.position.vertical + vertical,
             horizontal: element.position.horizontal + horizontal
         };
@@ -76,7 +76,8 @@ Controller.prototype.moveElements = function () {
             checkedPosition.vertical += vertical;
             checkedPosition.horizontal += horizontal;
         }
-        var checkedElement = self.field.getElementByPosition(self.validatePosition(checkedPosition));
+
+        var checkedElement = self.field.getElementByPosition(self.makePositionValid(checkedPosition));
 
         if (!!checkedElement && element.value == checkedElement.value && element.id != checkedElement.id) {
             checkedElement.setValue(element.value * 2);
@@ -85,15 +86,15 @@ Controller.prototype.moveElements = function () {
             var horizShift = self.moveVector.x == 0 ? 0 : constants.DEFAULT_GAME_ITEM_SIZE / 2;
 
             var mergedPosition = {
-                vertical: self.validatePosition(checkedPosition).vertical - vertShift,
-                horizontal: self.validatePosition(checkedPosition).horizontal - horizShift
+                vertical: self.makePositionValid(checkedPosition).vertical - vertShift,
+                horizontal: self.makePositionValid(checkedPosition).horizontal - horizShift
             };
 
-            element.move(mergedPosition);
+            element.move(self.makePositionValid(mergedPosition));
             array[number].merged = true;
             moves += 1;
         } else {
-            element.move(self.validatePosition(position));
+            element.move(self.makePositionValid(position));
         }
     });
 

@@ -1,6 +1,6 @@
 var randomInt = function (min, max) {
-    var rand = min - 0.5 + Math.random() * (max - min + 1);
-    rand = Math.round(rand);
+    var rand = min + Math.random() * (max + 1 - min);
+    rand = Math.floor(rand);
     return rand;
 };
 

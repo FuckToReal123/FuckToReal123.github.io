@@ -1,9 +1,9 @@
 import GameItem from './GameItem.js';
 import constants from '../lib/constants.js';
-import functions from '../lib/functions.js'
+import functions from '../lib/functions.js';
+import View from  "./View.js";
 
 function Field(size) {
-    this.htmlElemnt = document.getElementById('playfield');//элемент в вёрстке
     this.size = size;//размер стороны поля
     this.elements = [];//массив массивов с объектами GameItem
 }
@@ -11,23 +11,8 @@ function Field(size) {
 //метод обновления состояния поля
 Field.prototype.refresh = function () {
     var self = this;
-    var HTML = '';
 
-    setTimeout(function () {
-        var oldEllements = self.htmlElemnt.getElementsByClassName('thing');
-
-        while (oldEllements[0]){
-            oldEllements[0].parentNode.removeChild(oldEllements[0]);
-        }
-
-        self.elements.forEach(function (item) {
-            HTML += '<div class="thing t' + item.value + '" id="' + item.id + '" style="top: ' + item.position.vertical + 'px; left: ' +
-                item.position.horizontal + 'px;"></div>';
-        });
-
-        self.htmlElemnt.innerHTML += HTML;
-    }, constants.GAME_FIELD_REFRESH_DURATION);
-
+    View.refreshField(self);
 };
 
 Field.prototype.insertElement = function (element) {
@@ -41,21 +26,21 @@ Field.prototype.getRandomFreeCell = function () {
 
     var gameItemSize = constants.DEFAULT_GAME_ITEM_SIZE;
 
-   for(var i = 0; i < self.size; i++) {
-       for(var j = 0; j < self.size; j++) {
-           var checkedPosition = {
-               vertical: i * gameItemSize,
-               horizontal: j * gameItemSize
-           };
-           if(self.isCellFree(checkedPosition)){
-              avalibleCells.push(checkedPosition);
-           }
-       }
-   }
+    for (var i = 0; i < self.size; i++) {
+        for (var j = 0; j < self.size; j++) {
+            var checkedPosition = {//проверяемая позиция
+                vertical: i * gameItemSize,
+                horizontal: j * gameItemSize
+            };
+            if (self.isCellFree(checkedPosition)) {//если позиция не занята
+                avalibleCells.push(checkedPosition);
+            }
+        }
+    }
 
-   var randomNumber = functions.randomInt(0, avalibleCells.length - 1);
+    var randomNumber = functions.randomInt(0, avalibleCells.length - 1);//получаем случайный номер от 0 до длинны массива доступных ячеек
 
-   return avalibleCells[randomNumber];
+    return avalibleCells[randomNumber];//возвращаем случайную доступную ячейку
 };
 
 //есть ли свободные клетки на поле?
@@ -67,11 +52,11 @@ Field.prototype.isFreeCells = function () {
 Field.prototype.addElement = function () {
     var self = this;
 
-    if (self.isFreeCells()) {
-        var probability = Math.random();
-        if (probability < 0.9) {
+    if (self.isFreeCells()) {//если есть свободные клетки
+        var probability = Math.random();//определяем вероятность выпадения элемента с номиналом 4
+        if (probability < 0.9) {//если вероятность меньше 9/10
             self.insertElement(new GameItem(2, self.getRandomFreeCell()));
-        } else {
+        } else {//если вероятность больше либо равна 9/10
             self.insertElement(new GameItem(4, self.getRandomFreeCell()));
         }
 
@@ -83,14 +68,15 @@ Field.prototype.addElement = function () {
 Field.prototype.isCellFree = function (position) {
     var self = this;
     var result = true;
-    
-    if(self.getElementByPosition(position)){
+
+    if (self.getElementByPosition(position)) {
         result = false;
     }
 
     return result;
 };
 
+//возвращает элемент с указанной позицией
 Field.prototype.getElementByPosition = function (position) {
     var self = this;
     var result = null;

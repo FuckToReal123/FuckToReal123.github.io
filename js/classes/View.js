@@ -42,7 +42,7 @@ var View = (function () {
     };
 
     return {
-        getInstance: function () {// если экземпляр создан, то возврааем его иначе создаём новый и возвращаем
+        getInstance: function () {//если экземпляр создан, то возврааем его иначе создаём новый и возвращаем
             return instance || (instance = createInstance());
         }
     }
